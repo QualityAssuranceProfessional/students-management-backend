@@ -75,7 +75,7 @@ namespace API.Controllers
         {
             if (id != region.RegionId)
             {
-                return BadRequest();
+                return BadRequest("المنطقة التي قمت باختيارها غير موجودة ");
             }
 
             try
@@ -84,7 +84,7 @@ namespace API.Controllers
 
                 if (regionToUpdate == null)
                 {
-                    return NotFound();
+                    return BadRequest("حدث خطأ أثناء عملية التعديل");
                 }
 
                 regionToUpdate.Name = region.Name;
@@ -96,7 +96,8 @@ namespace API.Controllers
                 _context.Entry(regionToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+
+                return Ok("تمت  تعديل المنطقة بنجاح ");
             }
             catch (Exception ex)
             {
@@ -115,13 +116,14 @@ namespace API.Controllers
 
                 if (regionToDelete == null)
                 {
-                    return NotFound();
+                    return BadRequest("حدث خطأ أثناء عملية الحذف");
                 }
 
                 regionToDelete.Status = 9;
+                regionToDelete.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+                return Ok("تمت عملية حذف المنطقة بنجاح ");
             }
             catch (Exception ex)
             {

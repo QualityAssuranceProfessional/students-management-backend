@@ -75,7 +75,7 @@ namespace API.Controllers
         {
             if (id != city.CityId)
             {
-                return BadRequest();
+                return BadRequest("المدينة التي قمت باختيارها غير موجودة ");
             }
 
             try
@@ -95,7 +95,7 @@ namespace API.Controllers
                 _context.Entry(cityToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+                return Ok("تمت  تعديل المدينة بنجاح ");
             }
             catch (Exception ex)
             {
@@ -111,15 +111,16 @@ namespace API.Controllers
 
             if (cityToDelete == null)
             {
-                return NotFound();
+                return BadRequest("حدث خطأ أثناء عملية الحذف");
             }
 
             try
             {
                 cityToDelete.Status = 9;
+                cityToDelete.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return NoContent();
+                return Ok("تمت عملية حذف المدينة بنجاح ");
             }
             catch (Exception ex)
             {
