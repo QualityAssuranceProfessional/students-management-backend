@@ -46,17 +46,18 @@ namespace API.Controllers
 
         // Post api/Regions
         [HttpPost]
-        public async Task<IActionResult> AddRegion([FromBody] RegionPostDto city)
+        public async Task<IActionResult> AddRegion([FromBody] RegionPostDto region)
         {
             try
             {
-                Region region = new Region();
-                region.Name = city.Name;
-                region.CreatedOn = DateTime.Now;
-                region.CreatedBy = null;
-                region.Status = 1;
+                Region regionobj = new Region();
+                regionobj.Name = region.Name;
+                regionobj.CreatedOn = DateTime.Now;
+                regionobj.CreatedBy = null;
+                regionobj.Status = 1;
+                regionobj.CityId = region.CityId;
 
-                _context.Regions.Add(region);
+                _context.Regions.Add(regionobj);
                 await _context.SaveChangesAsync();
 
                 return Ok(region);
@@ -90,6 +91,7 @@ namespace API.Controllers
                 regionToUpdate.UpdatedOn = DateTime.Now;
                 regionToUpdate.UpdatedBy = null;
                 regionToUpdate.Status = 1;
+                regionToUpdate.CityId = region.CityId;
 
                 _context.Entry(regionToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
