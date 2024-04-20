@@ -26,19 +26,20 @@ namespace API.Controllers
             try
             {
                 var cities = await _context.Cities
-                    .Select(c=> new CityDto 
-                    {
-                        CityId = c.CityId,
-                        Name = c.Name,
-                        CreatedOn = c.CreatedOn
-                    })
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+                   .Select(c => new CityDto
+                   {
+                       CityId = c.CityId,
+                       Name = c.Name,
+                       CreatedOn = c.CreatedOn
+                   })
+                   .Skip((page - 1) * pageSize)
+                   .Take(pageSize)
+                   .ToListAsync();
 
                 return Ok(cities);
 
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -67,9 +68,61 @@ namespace API.Controllers
 
 
         // update api/Cities
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCity(int id, [FromBody] CityPutDto city)
+        {
+            if (id != city.CityId)
+            {
+                return BadRequest();
+            }
 
+            try
+            {
+                var cityToUpdate = await _context.Cities.FindAsync(id);
+
+                if (cityToUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                cityToUpdate.Name = city.Name;
+                cityToUpdate.UpdatedOn = DateTime.Now;
+                cityToUpdate.UpdatedBy = null;
+
+                _context.Entry(cityToUpdate).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // delete api/Cities
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCity(int id)
+        {
+            var cityToDelete = await _context.Cities.FindAsync(id);
 
+            if (cityToDelete == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.Cities.Remove(cityToDelete);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
+
 }

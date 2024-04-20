@@ -17,5 +17,7 @@ namespace API.Module
         public short? Status { get; set; }
 
         public virtual ICollection<Region> Regions { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 }
