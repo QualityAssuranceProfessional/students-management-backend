@@ -54,6 +54,7 @@ namespace API.Controllers
                 region.Name = city.Name;
                 region.CreatedOn = DateTime.Now;
                 region.CreatedBy = null;
+                region.Status = 1;
 
                 _context.Regions.Add(region);
                 await _context.SaveChangesAsync();
@@ -88,6 +89,7 @@ namespace API.Controllers
                 regionToUpdate.Name = region.Name;
                 regionToUpdate.UpdatedOn = DateTime.Now;
                 regionToUpdate.UpdatedBy = null;
+                regionToUpdate.Status = 1;
 
                 _context.Entry(regionToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
