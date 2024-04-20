@@ -44,6 +44,7 @@ namespace API.Controllers
             }
         }
 
+
         // Post api/Cities
         [HttpPost]
         public async Task<IActionResult> AddCity([FromBody] CityPostDto city)
@@ -57,11 +58,77 @@ namespace API.Controllers
 
                 _context.Cities.Add(cityobj);
                 await _context.SaveChangesAsync();
-                return Ok(city);
+                return Ok(cityobj);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCity([FromBody] CityDto city)
+        {
+                City cityobj = new City();
+                cityobj.CityId = city.CityId;
+                cityobj.Name = city.Name;
+                cityobj.CreatedOn = DateTime.Now;
+                cityobj.CreatedBy = null;
+
+                if (cityobj ==null || cityobj.CityId ==0)
+                {
+                    if (cityobj != null)
+                    {
+                        return BadRequest("City data is invalid");
+                    }
+                    else if(cityobj.CityId == 0)
+                    {
+                        return BadRequest($"City Id{cityobj.CityId} is invalid");
+                    }
+                }
+
+
+            try
+            {
+                var cities = await _context.Cities.FindAsync(cityobj.CityId);
+                if(cities == null)
+                {
+                    return NotFound($"City Id{cityobj.CityId} is invalid");
+                }
+                cities.Name = city.Name;
+                cities.CreatedOn = DateTime.Now;
+                cities.CreatedBy = null;
+                _context.SaveChanges();
+                return Ok("City detailes Updated");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteCity(CityDeleteDto City)
+        {
+            try
+
+             {
+                var cityobj = _context.Cities.Find(City.CityId);
+                if (cityobj == null)
+                {
+                    return NotFound($"City not Found with id {City.CityId}");
+                }
+                _context.Cities.Remove(cityobj);
+                _context.SaveChanges();
+                return Ok("City detailes Deleted");
+
+            }
+	         catch (Exception ex)
+
+            {
+                return BadRequest(ex.Message);
+
             }
         }
 
