@@ -97,7 +97,7 @@ namespace API.Controllers
                 await _context.SaveChangesAsync();
 
 
-                return Ok("تمت  تعديل المنطقة بنجاح ");
+                return Ok("تم تعديل المنطقة بنجاح ");
             }
             catch (Exception ex)
             {

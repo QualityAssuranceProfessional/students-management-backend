@@ -84,7 +84,7 @@ namespace API.Controllers
 
                 if (cityToUpdate == null)
                 {
-                    return NotFound();
+                    return BadRequest("حدث خطأ أثناء عملية التعديل");
                 }
 
                 cityToUpdate.Name = city.Name;
@@ -95,7 +95,7 @@ namespace API.Controllers
                 _context.Entry(cityToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok("تمت  تعديل المدينة بنجاح ");
+                return Ok("تم تعديل المدينة بنجاح ");
             }
             catch (Exception ex)
             {
