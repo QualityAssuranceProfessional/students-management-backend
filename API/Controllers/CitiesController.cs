@@ -26,6 +26,7 @@ namespace API.Controllers
             try
             {
                 var cities = await _context.Cities
+                   .Where(r => r.Status == 1)
                    .Select(c => new CityDto
                    {
                        CityId = c.CityId,
@@ -113,7 +114,7 @@ namespace API.Controllers
 
             try
             {
-                _context.Cities.Remove(cityToDelete);
+                cityToDelete.Status = 9;
                 await _context.SaveChangesAsync();
 
                 return NoContent();

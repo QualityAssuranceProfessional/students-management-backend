@@ -23,6 +23,7 @@ namespace API.Controllers
             try
             {
                 var regions = await _context.Regions
+                      .Where(r => r.Status == 1)
                       .Select(r => new RegionDto
                       {
                           RegionId = r.RegionId,
@@ -113,7 +114,7 @@ namespace API.Controllers
                     return NotFound();
                 }
 
-                _context.Regions.Remove(regionToDelete);
+                regionToDelete.Status = 9;
                 await _context.SaveChangesAsync();
 
                 return NoContent();
