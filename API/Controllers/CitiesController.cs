@@ -56,6 +56,7 @@ namespace API.Controllers
                 cityobj.Name = city.Name;
                 cityobj.CreatedOn = DateTime.Now;
                 cityobj.CreatedBy = null;
+                cityobj.Status = 1;
 
                 _context.Cities.Add(cityobj);
                 await _context.SaveChangesAsync();
@@ -89,6 +90,7 @@ namespace API.Controllers
                 cityToUpdate.Name = city.Name;
                 cityToUpdate.UpdatedOn = DateTime.Now;
                 cityToUpdate.UpdatedBy = null;
+                cityToUpdate.Status = 1;
 
                 _context.Entry(cityToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
