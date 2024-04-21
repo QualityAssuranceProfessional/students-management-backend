@@ -17,9 +17,7 @@ namespace API.Controllers
             _context = context;
         }
 
-
         // GET: api/Cities
-
         [HttpGet]
         public async Task<IActionResult> GetCities(int page = 1, int pageSize = 10)
         {
@@ -68,7 +66,6 @@ namespace API.Controllers
             }
         }
 
-
         // update api/Cities
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCity(int id, [FromBody] CityPutDto city)
@@ -78,9 +75,14 @@ namespace API.Controllers
                 return BadRequest("The city was not found.");
             }
 
+            if (String.IsNullOrEmpty(city.Name))
+            {
+                return StatusCode(404, "the city is empty !!");
+            }
+
             try
             {
-                var cityToUpdate = await _context.Cities.FindAsync(id);
+                var cityToUpdate = await _context.Cities.Where(x=>x.CityId == city.CityId).SingleOrDefaultAsync();
 
                 if (cityToUpdate == null)
                 {
@@ -92,7 +94,6 @@ namespace API.Controllers
                 cityToUpdate.UpdatedBy = null;
                 cityToUpdate.Status = 1;
 
-                _context.Entry(cityToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok("The city was updated successfully.");
