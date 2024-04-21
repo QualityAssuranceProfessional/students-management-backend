@@ -15,9 +15,9 @@ namespace API.Module
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public short? Status { get; set; }
-
-        public virtual ICollection<Region> Regions { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public virtual ICollection<Region> Regions { get; set; }
+        
     }
 }

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [Produces("application/json")]
+    [Route("Api/Admin/[controller]")]
     public class RegionsController : Controller
     {
         // constructor with dbcontext
@@ -75,7 +77,7 @@ namespace API.Controllers
         {
             if (id != region.RegionId)
             {
-                return BadRequest("المنطقة التي قمت باختيارها غير موجودة ");
+                return BadRequest("The region was not found.");
             }
 
             try
@@ -84,7 +86,7 @@ namespace API.Controllers
 
                 if (regionToUpdate == null)
                 {
-                    return BadRequest("حدث خطأ أثناء عملية التعديل");
+                    return BadRequest("The region was not found.");
                 }
 
                 regionToUpdate.Name = region.Name;
@@ -96,8 +98,7 @@ namespace API.Controllers
                 _context.Entry(regionToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-
-                return Ok("تم تعديل المنطقة بنجاح ");
+                return Ok("The region was updated successfully.");
             }
             catch (Exception ex)
             {
@@ -110,20 +111,19 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRegion(int id)
         {
+            var regionToDelete = await _context.Regions.FindAsync(id);
+
+            if (regionToDelete == null)
+            {
+                return NotFound("The region was not found.");
+            }
             try
             {
-                var regionToDelete = await _context.Regions.FindAsync(id);
-
-                if (regionToDelete == null)
-                {
-                    return BadRequest("حدث خطأ أثناء عملية الحذف");
-                }
-
                 regionToDelete.Status = 9;
                 regionToDelete.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return Ok("تمت عملية حذف المنطقة بنجاح ");
+                return Ok("The region was deleted successfully.");
             }
             catch (Exception ex)
             {
