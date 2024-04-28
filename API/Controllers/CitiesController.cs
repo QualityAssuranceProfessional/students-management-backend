@@ -19,7 +19,6 @@ namespace API.Controllers
 
 
         // GET: api/Cities
-
         [HttpGet]
         public async Task<IActionResult> GetCities(int page = 1, int pageSize = 10)
         {
