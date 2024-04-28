@@ -1,8 +1,8 @@
 ﻿namespace API.DTOs
 {
-    public class CityDto
+    internal class RegionDto
     {
-        public int CityId { get; set; }
+        public int RegionId { get; set; }
         public string? Name { get; set; }
         public DateTime? CreatedOn { get; set; }
     }

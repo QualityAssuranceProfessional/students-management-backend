@@ -17,7 +17,8 @@ namespace API.Module
         public int? CreatedBy { get; set; }
         public short? Status { get; set; }
         public int? CityId { get; set; }
-
+         public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public virtual City? City { get; set; }
         public virtual ICollection<Student> Students { get; set; }
         public virtual ICollection<Teacher> Teachers { get; set; }

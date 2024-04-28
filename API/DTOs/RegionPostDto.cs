@@ -1,7 +1,9 @@
 ﻿namespace API.DTOs
 {
-    public class CityPostDto
+    public class RegionPostDto
     {
         public string? Name { get; set; }
+        public int CityId { get; set; }
+
     }
 }

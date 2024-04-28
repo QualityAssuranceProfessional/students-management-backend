@@ -17,7 +17,6 @@ namespace API.Controllers
             _context = context;
         }
 
-
         // GET: api/Cities
         [HttpGet]
         public async Task<IActionResult> GetCities(int page = 1, int pageSize = 10)
@@ -25,19 +24,21 @@ namespace API.Controllers
             try
             {
                 var cities = await _context.Cities
-                    .Select(c=> new CityDto 
-                    {
-                        CityId = c.CityId,
-                        Name = c.Name,
-                        CreatedOn = c.CreatedOn
-                    })
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+                   .Where(r => r.Status == 1)
+                   .Select(c => new CityDto
+                   {
+                       CityId = c.CityId,
+                       Name = c.Name,
+                       CreatedOn = c.CreatedOn
+                   })
+                   .Skip((page - 1) * pageSize)
+                   .Take(pageSize)
+                   .ToListAsync();
 
                 return Ok(cities);
 
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -53,6 +54,7 @@ namespace API.Controllers
                 cityobj.Name = city.Name;
                 cityobj.CreatedOn = DateTime.Now;
                 cityobj.CreatedBy = null;
+                cityobj.Status = 1;
 
                 _context.Cities.Add(cityobj);
                 await _context.SaveChangesAsync();
@@ -64,11 +66,68 @@ namespace API.Controllers
             }
         }
 
-
         // update api/Cities
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCity(int id, [FromBody] CityPutDto city)
+        {
+            if (id != city.CityId)
+            {
+                return BadRequest("The city was not found.");
+            }
 
+            if (String.IsNullOrEmpty(city.Name))
+            {
+                return StatusCode(404, "the city is empty !!");
+            }
+
+            try
+            {
+                var cityToUpdate = await _context.Cities.Where(x=>x.CityId == city.CityId).SingleOrDefaultAsync();
+
+                if (cityToUpdate == null)
+                {
+                    return BadRequest("The city was not found.");
+                }
+
+                cityToUpdate.Name = city.Name;
+                cityToUpdate.UpdatedOn = DateTime.Now;
+                cityToUpdate.UpdatedBy = null;
+                cityToUpdate.Status = 1;
+
+                await _context.SaveChangesAsync();
+
+                return Ok("The city was updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         // delete api/Cities
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCity(int id)
+        {
+            var cityToDelete = await _context.Cities.FindAsync(id);
 
+            if (cityToDelete == null)
+            {
+                return NotFound("The city was not found.");
+            }
+
+            try
+            {
+                cityToDelete.Status = 9;
+                cityToDelete.UpdatedOn = DateTime.Now;
+                await _context.SaveChangesAsync();
+
+                return Ok("The city was deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
+
 }
