@@ -36,7 +36,7 @@ namespace API.Module
         public int? RegionId { get; set; }
         public string? Address { get; set; }
         public string? ParentName { get; set; }
-        public byte[]? ParentPhone { get; set; }
+        public string ParentPhone { get; set; }
         public string? ParentEmail { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
