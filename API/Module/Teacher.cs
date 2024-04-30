@@ -17,9 +17,7 @@ namespace API.Module
         public string? FatherName { get; set; }
         public string? GrandFatherName { get; set; }
         public string? SurName { get; set; }
-        /// <summary>
-        /// 1- Male  2-Female 
-        /// </summary>
+       
         public short? Gender { get; set; }
         public string? NationalId { get; set; }
         public DateTime? JoinDate { get; set; }
