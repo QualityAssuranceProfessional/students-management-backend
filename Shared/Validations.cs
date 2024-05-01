@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Shared
@@ -47,7 +48,25 @@ namespace Shared
                 if (string.IsNullOrEmpty(password)) return false;
 
                 if (password.Length < 9) return false;
+                if (!Regex.IsMatch(password, @"[A-Z]"))
+                {
+                    return false;
+                }
 
+                if (!Regex.IsMatch(password, @"[a-z]"))
+                {
+                    return false;
+                }
+
+                if (!Regex.IsMatch(password, @"[0-9]"))
+                {
+                    return false;
+                }
+
+                if (!Regex.IsMatch(password, @"[!@#$%^&*(),.?\:{ }|<>]"))
+        {
+                    return false;
+                }
                 return true;
             }
             catch

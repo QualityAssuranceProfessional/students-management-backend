@@ -93,7 +93,7 @@ namespace API.Controllers
                 }
                 if (!Validations.IsValidPassword(student.Password))
                 {
-                    return StatusCode(404, "Password can't be null or less than 9 letters !!");
+                    return StatusCode(404, "Password can't be null or less than 9 letters must be mixed with letters and numbers and characters !!");
                 }
                 Student studentobj = new Student();
                 studentobj.Photo = student.Photo;
