@@ -28,9 +28,9 @@ namespace Shared
         {
             try
             {
-                if(string.IsNullOrEmpty(phone)) return false;
+                if (string.IsNullOrEmpty(phone)) return false;
 
-                if(phone.Length < 9 || phone.Length > 13) return false;
+                if (phone.Length < 9 || phone.Length > 13) return false;
 
                 return true;
             }
@@ -40,8 +40,19 @@ namespace Shared
             }
         }
 
+        public static bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                return false;
+            }
 
+            if (password.Length < 6)
+            {
+                return false;
+            }
 
-
+            return true;
+        }
     }
 }

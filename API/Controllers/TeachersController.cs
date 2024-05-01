@@ -61,67 +61,61 @@ namespace API.Controllers
         }
         // Post api/Teachers
 
-    [HttpPost]
-    public async Task<IActionResult> AddTeacher([FromBody] TeacherPostDto teacher)
-    {
-        try
+        [HttpPost]
+        public async Task<IActionResult> AddTeacher([FromBody] TeacherPostDto teacher)
         {
-            if (teacher == null)
+            try
             {
-                return BadRequest("The teacher data is missing or invalid.");
+                if (teacher == null)
+                {
+                    return BadRequest("The teacher data is missing or invalid.");
+                }
+
+                if (!Validations.IsValidEmail(teacher.Email))
+                {
+                    return BadRequest("Invalid email address.");
+                }
+
+                if (!Validations.IsValidPassword(teacher.Password))
+                {
+                    return BadRequest("Invalid password. Password must be at least 6 characters long.");
+                }
+
+                var teacherobj = new Teacher
+                {
+                    FirstName = teacher.FirstName,
+                    FatherName = teacher.FatherName,
+                    GrandFatherName = teacher.GrandFatherName,
+                    SurName = teacher.SurName,
+                    Gender = teacher.Gender,
+                    NationalId = teacher.NationalId,
+                    JoinDate = teacher.JoinDate,
+                    Specialization = teacher.Specialization,
+                    RegionId = teacher.RegionId,
+                    Address = teacher.Address,
+                    Username = teacher.Username,
+                    Email = teacher.Email,
+                    Password = teacher.Password,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = null,
+                    Status = 1
+                };
+
+                _context.Teachers.Add(teacherobj);
+                await _context.SaveChangesAsync();
+
+                return Ok(teacher);
             }
-
-            if (!Validations.IsValidEmail(teacher.Email))
+            catch (Exception ex)
             {
-                return BadRequest("Invalid email address.");
+                return BadRequest(ex.Message);
             }
-
-            if (string.IsNullOrWhiteSpace(teacher.Password))
-            {
-                return BadRequest("Password is required.");
-            }
-
-            if (teacher.Password.Length < 6)
-            {
-                return BadRequest("Password must be at least 6 characters long.");
-            }
-
-            var teacherobj = new Teacher
-            {
-                FirstName = teacher.FirstName,
-                FatherName = teacher.FatherName,
-                GrandFatherName = teacher.GrandFatherName,
-                SurName = teacher.SurName,
-                Gender = teacher.Gender,
-                NationalId = teacher.NationalId,
-                JoinDate = teacher.JoinDate,
-                Specialization = teacher.Specialization,
-                RegionId = teacher.RegionId,
-                Address = teacher.Address,
-                Username = teacher.Username,
-                Email = teacher.Email,
-                Password = teacher.Password,
-                CreatedOn = DateTime.Now,
-                CreatedBy = null, 
-                Status = 1
-            };
-
-            _context.Teachers.Add(teacherobj);
-            await _context.SaveChangesAsync();
-
-            return Ok(teacher);
         }
-        catch (Exception ex)
-        {
-    
-            return BadRequest(ex.Message);
-        }
-    }
 
-    // update api/Teachers
+        // update api/Teachers
 
 
-    [HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCity(int id, [FromBody] TeacherPutDto teacher)
         {
             if (id != teacher.TeacherId)
