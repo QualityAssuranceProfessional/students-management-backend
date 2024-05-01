@@ -150,7 +150,6 @@ namespace API.Controllers
                 teacherToUpdate.Username= teacher.Username;
                 teacherToUpdate.Email= teacher.Email;
                 teacherToUpdate.Password = teacher.Password;
-
                 teacherToUpdate.UpdatedOn = DateTime.Now;
                 teacherToUpdate.UpdatedBy = null;
                 teacherToUpdate.Status = 1;

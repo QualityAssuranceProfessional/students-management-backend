@@ -18,7 +18,7 @@ namespace API.DTOs
         public string? Address { get; set; }
         public string? Username { get; set; }
         public string? Email { get; set; }
-        public byte[]? Password { get; set; }
+        public string? Password { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public short? Status { get; set; }
