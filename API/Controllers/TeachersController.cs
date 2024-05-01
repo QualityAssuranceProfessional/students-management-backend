@@ -18,14 +18,14 @@ namespace API.Controllers
         }
 
         // GET: api/Teachers
-
         [HttpGet]
         public async Task<IActionResult> GetTeachers(int page = 1, int pageSize = 10)
         {
             try
             {
                 var teachers = await _context.Teachers
-                    .OrderByDescending(t => t.CreatedOn) 
+                    .Where(t => t.Status == 1) // Filter teachers with Status = 1
+                    .OrderByDescending(t => t.CreatedOn)
                     .Select(t => new TeacherDto
                     {
                         TeacherId = t.TeacherId,
@@ -57,9 +57,9 @@ namespace API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-            // Post api/Teachers
+        // Post api/Teachers
 
-            [HttpPost]
+        [HttpPost]
             public async Task<IActionResult> AddTeacher([FromBody] TeacherPostDto teacher)
             {
                 try
@@ -123,6 +123,18 @@ namespace API.Controllers
                 }
 
                 teacherToUpdate.FirstName = teacher.FirstName;
+                teacherToUpdate.FatherName = teacher.FatherName;
+                teacherToUpdate.GrandFatherName= teacher.GrandFatherName;
+                teacherToUpdate.SurName= teacher.SurName;
+                teacherToUpdate.NationalId= teacher.NationalId;
+                teacherToUpdate.JoinDate=teacher.JoinDate;
+                teacherToUpdate.Specialization= teacher.Specialization;
+                teacherToUpdate.RegionId= teacher.RegionId;
+                teacherToUpdate.Address= teacher.Address;
+                teacherToUpdate.Username= teacher.Username;
+                teacherToUpdate.Email= teacher.Email;
+                teacherToUpdate.Password = teacher.Password;
+
                 teacherToUpdate.UpdatedOn = DateTime.Now;
                 teacherToUpdate.UpdatedBy = null;
                 teacherToUpdate.Status = 1;
@@ -139,7 +151,7 @@ namespace API.Controllers
 
         // delete api/teacher
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Deleteteacher(int id)
+        public async Task<IActionResult> DeleteTeacher(long id) 
         {
             var teacherToDelete = await _context.Teachers.FindAsync(id);
 
@@ -156,11 +168,34 @@ namespace API.Controllers
 
                 return Ok("The teacher was deleted successfully.");
             }
-            catch (Exception ex)    
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        /* [HttpDelete("{id}")]
+         public async Task<IActionResult> Deleteteacher(int id)
+         {
+             var teacherToDelete = await _context.Teachers.FindAsync(id);
+
+             if (teacherToDelete == null)
+             {
+                 return NotFound("The teacher was not found.");
+             }
+
+             try
+             {
+                 teacherToDelete.Status = 9;
+                 teacherToDelete.UpdatedOn = DateTime.Now;
+                 await _context.SaveChangesAsync();
+
+                 return Ok("The teacher was deleted successfully.");
+             }
+             catch (Exception ex)    
+             {
+                 return BadRequest(ex.Message);
+             }
+         }*/
     }
 }
 
