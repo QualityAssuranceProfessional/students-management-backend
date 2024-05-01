@@ -23,9 +23,9 @@ namespace API.DTOs
         public int? CreatedBy { get; set; }
         public short? Status { get; set; }
 
-        public virtual Region? Region { get; set; }
+     /*   public virtual Region? Region { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<Library> Libraries { get; set; }
-        public virtual ICollection<Subject> Subjects { get; set; }
+        public virtual ICollection<Subject> Subjects { get; set; }*/
     }
 }

@@ -114,40 +114,49 @@ namespace API.Controllers
 
         // update api/Teachers
 
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCity(int id, [FromBody] TeacherPutDto teacher)
+        public async Task<IActionResult> UpdateTeacher(int id, [FromBody] TeacherPutDto teacher)
         {
             if (id != teacher.TeacherId)
             {
-                return BadRequest("The teacher was not found.");
+                return BadRequest("The teacher ID in the route does not match the teacher ID in the request body.");
             }
 
             if (String.IsNullOrEmpty(teacher.FirstName))
             {
-                return StatusCode(404, "the teacher is empty !!");
+                return BadRequest("The first name of the teacher is required.");
+            }
+
+            if (!Validations.IsValidEmail(teacher.Email))
+            {
+                return BadRequest("Invalid email address.");
+            }
+
+            if (!Validations.IsValidPassword(teacher.Password))
+            {
+                return BadRequest("Invalid password. Password must be at least 6 characters long.");
             }
 
             try
             {
-                var teacherToUpdate = await _context.Teachers.Where(x => x.TeacherId == teacher.TeacherId).SingleOrDefaultAsync();
+                var teacherToUpdate = await _context.Teachers.FirstOrDefaultAsync(x => x.TeacherId == id);
 
                 if (teacherToUpdate == null)
                 {
-                    return BadRequest("The teacher was not found.");
+                    return NotFound("The teacher was not found.");
                 }
 
                 teacherToUpdate.FirstName = teacher.FirstName;
                 teacherToUpdate.FatherName = teacher.FatherName;
-                teacherToUpdate.GrandFatherName= teacher.GrandFatherName;
-                teacherToUpdate.SurName= teacher.SurName;
-                teacherToUpdate.NationalId= teacher.NationalId;
-                teacherToUpdate.JoinDate=teacher.JoinDate;
-                teacherToUpdate.Specialization= teacher.Specialization;
-                teacherToUpdate.RegionId= teacher.RegionId;
-                teacherToUpdate.Address= teacher.Address;
-                teacherToUpdate.Username= teacher.Username;
-                teacherToUpdate.Email= teacher.Email;
+                teacherToUpdate.GrandFatherName = teacher.GrandFatherName;
+                teacherToUpdate.SurName = teacher.SurName;
+                teacherToUpdate.NationalId = teacher.NationalId;
+                teacherToUpdate.JoinDate = teacher.JoinDate;
+                teacherToUpdate.Specialization = teacher.Specialization;
+                teacherToUpdate.RegionId = teacher.RegionId;
+                teacherToUpdate.Address = teacher.Address;
+                teacherToUpdate.Username = teacher.Username;
+                teacherToUpdate.Email = teacher.Email;
                 teacherToUpdate.Password = teacher.Password;
                 teacherToUpdate.UpdatedOn = DateTime.Now;
                 teacherToUpdate.UpdatedBy = null;
@@ -162,6 +171,55 @@ namespace API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        /*
+                [HttpPut("{id}")]
+                public async Task<IActionResult> UpdateCity(int id, [FromBody] TeacherPutDto teacher)
+                {
+                    if (id != teacher.TeacherId)
+                    {
+                        return BadRequest("The teacher was not found.");
+                    }
+
+                    if (String.IsNullOrEmpty(teacher.FirstName))
+                    {
+                        return StatusCode(404, "the teacher is empty !!");
+                    }
+
+                    try
+                    {
+                        var teacherToUpdate = await _context.Teachers.Where(x => x.TeacherId == teacher.TeacherId).SingleOrDefaultAsync();
+
+                        if (teacherToUpdate == null)
+                        {
+                            return BadRequest("The teacher was not found.");
+                        }
+
+                        teacherToUpdate.FirstName = teacher.FirstName;
+                        teacherToUpdate.FatherName = teacher.FatherName;
+                        teacherToUpdate.GrandFatherName= teacher.GrandFatherName;
+                        teacherToUpdate.SurName= teacher.SurName;
+                        teacherToUpdate.NationalId= teacher.NationalId;
+                        teacherToUpdate.JoinDate=teacher.JoinDate;
+                        teacherToUpdate.Specialization= teacher.Specialization;
+                        teacherToUpdate.RegionId= teacher.RegionId;
+                        teacherToUpdate.Address= teacher.Address;
+                        teacherToUpdate.Username= teacher.Username;
+                        teacherToUpdate.Email= teacher.Email;
+                        teacherToUpdate.Password = teacher.Password;
+                        teacherToUpdate.UpdatedOn = DateTime.Now;
+                        teacherToUpdate.UpdatedBy = null;
+                        teacherToUpdate.Status = 1;
+
+                        await _context.SaveChangesAsync();
+
+                        return Ok("The teacher was updated successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }*/
 
         // delete api/teacher
         [HttpDelete("{id}")]
