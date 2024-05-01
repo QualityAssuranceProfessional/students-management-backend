@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using API.Module;
 
-namespace API.Module
+namespace API.DTOs
 {
-    public partial class Teacher
+    public class TeacherDto
     {
-        public Teacher()
-        {
-            Attendances = new HashSet<Attendance>();
-            Libraries = new HashSet<Library>();
-            Subjects = new HashSet<Subject>();
-        }
-
         public long TeacherId { get; set; }
         public string? FirstName { get; set; }
         public string? FatherName { get; set; }
         public string? GrandFatherName { get; set; }
         public string? SurName { get; set; }
-       
+
         public short? Gender { get; set; }
         public string? NationalId { get; set; }
         public DateTime? JoinDate { get; set; }
@@ -31,8 +23,6 @@ namespace API.Module
         public int? CreatedBy { get; set; }
         public short? Status { get; set; }
 
-        public int? UpdatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
         public virtual Region? Region { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<Library> Libraries { get; set; }
