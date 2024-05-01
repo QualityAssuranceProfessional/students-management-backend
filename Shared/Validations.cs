@@ -40,6 +40,21 @@ namespace Shared
             }
         }
 
+        public static bool IsValidPassword(string password)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(password)) return false;
+
+                if (password.Length < 9) return false;
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
 
 
