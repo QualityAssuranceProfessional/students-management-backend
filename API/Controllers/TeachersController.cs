@@ -3,9 +3,11 @@ using API.Module;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 
 namespace API.Controllers
 {
+    
     [Produces("application/json")]
     [Route("Api/Admin/[controller]")]
     public class TeachersController : Controller
@@ -59,44 +61,59 @@ namespace API.Controllers
         }
         // Post api/Teachers
 
+
         [HttpPost]
-            public async Task<IActionResult> AddTeacher([FromBody] TeacherPostDto teacher)
+        public async Task<IActionResult> AddTeacher([FromBody] TeacherPostDto teacher)
+        {
+            try
             {
-                try
+                // Check if the teacher parameter is null
+                if (teacher == null)
                 {
-                   
-                    var teacherobj = new Teacher
-                    {
-                        FirstName = teacher.FirstName,
-                        FatherName = teacher.FatherName,
-                        GrandFatherName = teacher.GrandFatherName,
-                        SurName = teacher.SurName,
-                        Gender = teacher.Gender,
-                        NationalId = teacher.NationalId,
-                        JoinDate = teacher.JoinDate,
-                        Specialization = teacher.Specialization,
-                        RegionId = teacher.RegionId,
-                        Address = teacher.Address,
-                        Username = teacher.Username,
-                        Email = teacher.Email,
-                        Password = teacher.Password,
-                        CreatedOn = DateTime.Now,
-                        CreatedBy = null,
-                        Status = 1 
-                    };
-
-                   
-                    _context.Teachers.Add(teacherobj);
-                    await _context.SaveChangesAsync();
-
-                    return Ok(teacher);
+                    return BadRequest("The teacher data is missing or invalid.");
                 }
-                catch (Exception ex)
+
+                // Validate email
+                if (!Validations.IsValidEmail(teacher.Email))
                 {
-                    return BadRequest(ex.Message);
+                    return BadRequest("Invalid email address.");
                 }
+
+                // Create a new Teacher object and map properties from TeacherPostDto
+                var teacherobj = new Teacher
+                {
+                    FirstName = teacher.FirstName,
+                    FatherName = teacher.FatherName,
+                    GrandFatherName = teacher.GrandFatherName,
+                    SurName = teacher.SurName,
+                    Gender = teacher.Gender,
+                    NationalId = teacher.NationalId,
+                    JoinDate = teacher.JoinDate,
+                    Specialization = teacher.Specialization,
+                    RegionId = teacher.RegionId,
+                    Address = teacher.Address,
+                    Username = teacher.Username,
+                    Email = teacher.Email,
+                    Password = teacher.Password,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = null, // You may need to set this value based on the current user
+                    Status = 1 // You may need to set the initial status
+                };
+
+                // Add the new teacher to the database and save changes
+                _context.Teachers.Add(teacherobj);
+                await _context.SaveChangesAsync();
+
+                // Return a successful response with the added teacher object
+                return Ok(teacher);
             }
-                 
+            catch (Exception ex)
+            {
+                // If an exception occurs, return a bad request response with the error message
+                return BadRequest(ex.Message);
+            }
+        }
+
         // update api/Teachers
 
 
