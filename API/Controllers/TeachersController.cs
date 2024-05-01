@@ -79,7 +79,6 @@ namespace API.Controllers
                     return BadRequest("Invalid email address.");
                 }
 
-                // Create a new Teacher object and map properties from TeacherPostDto
                 var teacherobj = new Teacher
                 {
                     FirstName = teacher.FirstName,
@@ -96,20 +95,20 @@ namespace API.Controllers
                     Email = teacher.Email,
                     Password = teacher.Password,
                     CreatedOn = DateTime.Now,
-                    CreatedBy = null, // You may need to set this value based on the current user
-                    Status = 1 // You may need to set the initial status
+                    CreatedBy = null,
+                    Status = 1 
                 };
 
-                // Add the new teacher to the database and save changes
+                
                 _context.Teachers.Add(teacherobj);
                 await _context.SaveChangesAsync();
 
-                // Return a successful response with the added teacher object
+               
                 return Ok(teacher);
             }
             catch (Exception ex)
             {
-                // If an exception occurs, return a bad request response with the error message
+               
                 return BadRequest(ex.Message);
             }
         }
