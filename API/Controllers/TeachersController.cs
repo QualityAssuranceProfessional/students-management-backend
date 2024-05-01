@@ -129,7 +129,7 @@ namespace API.Controllers
 
             if (!Validations.IsValidEmail(teacher.Email))
             {
-                return BadRequest("Invalid email address.");
+                return BadRequest("Invalid Email address.");
             }
 
             if (!Validations.IsValidPassword(teacher.Password))
