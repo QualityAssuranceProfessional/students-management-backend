@@ -40,11 +40,14 @@ namespace API.Module
         public string? ParentEmail { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
+        public DateTime? UpdatedOn { get; internal set; }
+        public int? UpdatedBy { get; internal set; }
         public short? Status { get; set; }
 
         public virtual Region? Region { get; set; }
         public virtual YearClass? YearClass { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<Enrollment> Enrollments { get; set; }
+ 
     }
 }

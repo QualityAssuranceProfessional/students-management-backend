@@ -1,7 +1,8 @@
-﻿namespace API.DTOs
+﻿namespace API.Controllers
 {
-    public class StudentPostDto
+    public class StudentPutDto
     {
+        public long StudentId { get; set; }
         public byte[]? Photo { get; set; }
         public string? FirstName { get; set; }
         public string? FahterName { get; set; }
