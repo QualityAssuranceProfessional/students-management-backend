@@ -172,55 +172,6 @@ namespace API.Controllers
             }
         }
 
-        /*
-                [HttpPut("{id}")]
-                public async Task<IActionResult> UpdateCity(int id, [FromBody] TeacherPutDto teacher)
-                {
-                    if (id != teacher.TeacherId)
-                    {
-                        return BadRequest("The teacher was not found.");
-                    }
-
-                    if (String.IsNullOrEmpty(teacher.FirstName))
-                    {
-                        return StatusCode(404, "the teacher is empty !!");
-                    }
-
-                    try
-                    {
-                        var teacherToUpdate = await _context.Teachers.Where(x => x.TeacherId == teacher.TeacherId).SingleOrDefaultAsync();
-
-                        if (teacherToUpdate == null)
-                        {
-                            return BadRequest("The teacher was not found.");
-                        }
-
-                        teacherToUpdate.FirstName = teacher.FirstName;
-                        teacherToUpdate.FatherName = teacher.FatherName;
-                        teacherToUpdate.GrandFatherName= teacher.GrandFatherName;
-                        teacherToUpdate.SurName= teacher.SurName;
-                        teacherToUpdate.NationalId= teacher.NationalId;
-                        teacherToUpdate.JoinDate=teacher.JoinDate;
-                        teacherToUpdate.Specialization= teacher.Specialization;
-                        teacherToUpdate.RegionId= teacher.RegionId;
-                        teacherToUpdate.Address= teacher.Address;
-                        teacherToUpdate.Username= teacher.Username;
-                        teacherToUpdate.Email= teacher.Email;
-                        teacherToUpdate.Password = teacher.Password;
-                        teacherToUpdate.UpdatedOn = DateTime.Now;
-                        teacherToUpdate.UpdatedBy = null;
-                        teacherToUpdate.Status = 1;
-
-                        await _context.SaveChangesAsync();
-
-                        return Ok("The teacher was updated successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest(ex.Message);
-                    }
-                }*/
-
         // delete api/teacher
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeacher(long id) 
@@ -245,29 +196,7 @@ namespace API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        /* [HttpDelete("{id}")]
-         public async Task<IActionResult> Deleteteacher(int id)
-         {
-             var teacherToDelete = await _context.Teachers.FindAsync(id);
-
-             if (teacherToDelete == null)
-             {
-                 return NotFound("The teacher was not found.");
-             }
-
-             try
-             {
-                 teacherToDelete.Status = 9;
-                 teacherToDelete.UpdatedOn = DateTime.Now;
-                 await _context.SaveChangesAsync();
-
-                 return Ok("The teacher was deleted successfully.");
-             }
-             catch (Exception ex)    
-             {
-                 return BadRequest(ex.Message);
-             }
-         }*/
+       
     }
 }
 
