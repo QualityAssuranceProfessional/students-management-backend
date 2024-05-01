@@ -3,7 +3,7 @@
     public class StudentPutDto
     {
         public long StudentId { get; set; }
-        public byte[]? Photo { get; set; }
+        public string? Photo { get; set; }
         public string? FirstName { get; set; }
         public string? FahterName { get; set; }
         public string? GrandFatherName { get; set; }
@@ -13,10 +13,10 @@
         public DateTime? BirthDate { get; set; }
         public DateTime? JoinDate { get; set; }
         public string? BloodType { get; set; }
-        public short? YearClassId { get; set; }
+        public short? YearClassID { get; set; }
         public string? Username { get; set; }
         public string? Email { get; set; }
-        public byte[]? Password { get; set; }
+        public string? Password { get; set; }
         public int? RegionId { get; set; }
         public string? Address { get; set; }
         public string? ParentName { get; set; }

@@ -306,7 +306,7 @@ namespace API.Module
 
                 entity.Property(e => e.Username).HasMaxLength(100);
 
-                entity.Property(e => e.YearClassId).HasColumnName("YearClassID");
+                entity.Property(e => e.YearClassID).HasColumnName("YearClassID");
 
                 entity.HasOne(d => d.Region)
                     .WithMany(p => p.Students)
@@ -315,7 +315,7 @@ namespace API.Module
 
                 entity.HasOne(d => d.YearClass)
                     .WithMany(p => p.Students)
-                    .HasForeignKey(d => d.YearClassId)
+                    .HasForeignKey(d => d.YearClassID)
                     .HasConstraintName("FK_Students_YearClass");
             });
 

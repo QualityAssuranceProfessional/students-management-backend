@@ -38,7 +38,7 @@ namespace API.Controllers
                          BirthDate = s.BirthDate,
                          JoinDate = s.JoinDate,
                          BloodType = s.BloodType,
-                         YearClassId = s.YearClassId,
+                         YearClassID = s.YearClassID,
                          Username = s.Username,
                          Email = s.Email,
                          Password = s.Password,
@@ -68,7 +68,15 @@ namespace API.Controllers
         public async Task<IActionResult> AddStudent([FromBody] StudentPostDto student)
         {
             try
-            {/*
+            {
+
+                if (student == null)
+                {
+                    return StatusCode(404, "خطأ في عملية ارسال البيانات");
+                }
+
+
+                
                 if (!Validations.IsValidPhone(student.ParentPhone))
                 {
                     return StatusCode(404, "Parent's Phonenumber is not valid !!");
@@ -83,32 +91,6 @@ namespace API.Controllers
                 {
                     return StatusCode(404, "Student's email is not valid !!");
                 }
-
-                return Ok("Validations is success !!");*/
-                /*   var studentobj = new Student {
-                      Photo = student.Photo,
-                      FirstName = student.FirstName,
-                      FahterName = student.FahterName,
-                      GrandFatherName = student.GrandFatherName,
-                      SurName = student.SurName,
-                      Gender = student.Gender,
-                      NationalId = student.NationalId,
-                      BirthDate = student.BirthDate,
-                      JoinDate = student.JoinDate,
-                      BloodType = student.BloodType,
-                      YearClassId = student.YearClassId,
-                      Username = student.Username,
-                      Email = student.Email,
-                      Password = student.Password,
-                      RegionId = student.RegionId,
-                      Address = student.Address,
-                      ParentName = student.ParentName,
-                      ParentPhone = student.ParentPhone,
-                      ParentEmail = student.ParentEmail,
-                      CreatedOn = DateTime.Now,
-                      CreatedBy = null,
-                      Status = 1
-                  }; */
                 Student studentobj = new Student();
                 studentobj.Photo = student.Photo;
                 studentobj.FirstName = student.FirstName;
@@ -120,11 +102,11 @@ namespace API.Controllers
                 studentobj.BirthDate = student.BirthDate;
                 studentobj.JoinDate = student.JoinDate;
                 studentobj.BloodType = student.BloodType;
-                studentobj.YearClassId = student.YearClassId;
+                studentobj.YearClassID =(student.YearClassID == 0 ? null : student.YearClassID);
                 studentobj.Username = student.Username;
                 studentobj.Email = student.Email;
                 studentobj.Password = student.Password;
-                studentobj.RegionId = student.RegionId;
+                studentobj.RegionId = (student.RegionId==0 ? null:student.RegionId);
                 studentobj.Address = student.Address;
                 studentobj.ParentName = student.ParentName;
                 studentobj.ParentPhone = student.ParentPhone;
@@ -146,7 +128,7 @@ namespace API.Controllers
 
         // update api/Students
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentPutDto student)
+        public async Task<IActionResult> UpdateStudent(long id, [FromBody] StudentPutDto student)
         {
             if (id != student.StudentId)
             {
@@ -172,11 +154,11 @@ namespace API.Controllers
                 studentToUpdate.BirthDate = student.BirthDate;
                 studentToUpdate.JoinDate = student.JoinDate;
                 studentToUpdate.BloodType = student.BloodType;
-                studentToUpdate.YearClassId = student.YearClassId;
+                studentToUpdate.YearClassID = (student.YearClassID == 0 ? null : student.YearClassID);
                 studentToUpdate.Username = student.Username;
                 studentToUpdate.Email = student.Email;
                 studentToUpdate.Password = student.Password;
-                studentToUpdate.RegionId = student.RegionId;
+                studentToUpdate.RegionId = (student.RegionId == 0 ? null : student.RegionId);
                 studentToUpdate.Address = student.Address;
                 studentToUpdate.ParentName = student.ParentName;
                 studentToUpdate.ParentPhone = student.ParentPhone;
@@ -200,7 +182,7 @@ namespace API.Controllers
 
         // DELETE: api/Students
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteStudent(long id)
         {
             var studentToDelete = await _context.Students.FindAsync(id);
 
