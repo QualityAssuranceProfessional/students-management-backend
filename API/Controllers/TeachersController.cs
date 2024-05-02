@@ -60,7 +60,6 @@ namespace API.Controllers
             }
         }
         // Post api/Teachers
-
         [HttpPost]
         public async Task<IActionResult> AddTeacher([FromBody] TeacherPostDto teacher)
         {
@@ -76,9 +75,10 @@ namespace API.Controllers
                     return BadRequest("Invalid email address.");
                 }
 
-                if (!Validations.IsValidPassword(teacher.Password))
+                if (!Validations.IsStringOnly(teacher.FirstName) )
+                   
                 {
-                    return BadRequest("Invalid password. Password must be at least 6 characters long.");
+                    return BadRequest("this fields should only string");
                 }
 
                 var teacherobj = new Teacher
@@ -111,7 +111,6 @@ namespace API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
         // update api/Teachers
 
         [HttpPut("{id}")]

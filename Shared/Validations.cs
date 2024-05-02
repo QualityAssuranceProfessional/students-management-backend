@@ -54,5 +54,30 @@ namespace Shared
 
             return true;
         }
+        public static bool IsStringOnly(object value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            string strValue = value.ToString();
+
+            if (string.IsNullOrWhiteSpace(strValue))
+            {
+                return false;
+            }
+
+         
+            foreach (char c in strValue)
+            {
+                if (!char.IsLetter(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
