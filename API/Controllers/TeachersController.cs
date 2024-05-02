@@ -69,7 +69,10 @@ namespace API.Controllers
                 {
                     return BadRequest("The teacher data is missing or invalid.");
                 }
-
+                if (!Validations.IsPasswordComplex(teacher.Password))
+                {
+                    return BadRequest("plz Password not Complex");
+                }
                 if (!Validations.IsValidEmail(teacher.Email))
                 {
                     return BadRequest("Invalid email address.");
@@ -131,9 +134,9 @@ namespace API.Controllers
                 return BadRequest("Invalid Email address.");
             }
 
-            if (!Validations.IsValidPassword(teacher.Password))
+            if (!Validations.IsPasswordComplex(teacher.Password))
             {
-                return BadRequest("Invalid password. Password must be at least 6 characters long.");
+                return BadRequest("plz Password not Complex");
             }
 
             if (!Validations.IsStringOnly(teacher.FirstName))

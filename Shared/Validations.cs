@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Shared
@@ -40,19 +41,13 @@ namespace Shared
             }
         }
 
-        public static bool IsValidPassword(string password)
+        public static bool IsPasswordComplex(string password)
         {
-            if (string.IsNullOrEmpty(password))
-            {
-                return false;
-            }
-
-            if (password.Length < 6)
-            {
-                return false;
-            }
-
-            return true;
+                return password.Length >= 6
+                && password.Any(char.IsUpper)
+                && password.Any(char.IsLower)
+                && password.Any(char.IsDigit)
+                && password.Any(ch => !char.IsLetterOrDigit(ch));
         }
         public static bool IsStringOnly(object value)
         {
