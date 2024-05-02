@@ -136,6 +136,12 @@ namespace API.Controllers
                 return BadRequest("Invalid password. Password must be at least 6 characters long.");
             }
 
+            if (!Validations.IsStringOnly(teacher.FirstName))
+
+            {
+                return BadRequest("this fields should only string");
+            }
+
             try
             {
                 var teacherToUpdate = await _context.Teachers.FirstOrDefaultAsync(x => x.TeacherId == id);
