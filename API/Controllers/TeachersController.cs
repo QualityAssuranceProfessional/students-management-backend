@@ -69,20 +69,23 @@ namespace API.Controllers
                 {
                     return BadRequest("The teacher data is missing or invalid.");
                 }
-                if (!Validations.IsPasswordComplex(teacher.Password))
+
+                var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
+                if (!passwordValidation.isComplex)
                 {
-                    return BadRequest("plz Password not Complex");
+                    return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation.messages));
                 }
                 if (!Validations.IsValidEmail(teacher.Email))
                 {
                     return BadRequest("Invalid email address.");
                 }
 
-                if (!Validations.IsStringOnly(teacher.FirstName) )
-                   
+                if (!Validations.IsStringOnly(teacher.FirstName))
+
                 {
                     return BadRequest("this fields should only string");
                 }
+            
 
                 var teacherobj = new Teacher
                 {
@@ -134,9 +137,10 @@ namespace API.Controllers
                 return BadRequest("Invalid Email address.");
             }
 
-            if (!Validations.IsPasswordComplex(teacher.Password))
+            var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
+            if (!passwordValidation.isComplex)
             {
-                return BadRequest("plz Password not Complex");
+                return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation.messages));
             }
 
             if (!Validations.IsStringOnly(teacher.FirstName))
