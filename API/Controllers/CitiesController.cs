@@ -82,7 +82,8 @@ namespace API.Controllers
 
             try
             {
-                var cityToUpdate = await _context.Cities.Where(x=>x.CityId == city.CityId).SingleOrDefaultAsync();
+                var cityToUpdate = await _context.Cities.Where
+                    (x=>x.CityId == city.CityId).SingleOrDefaultAsync();
 
                 if (cityToUpdate == null)
                 {

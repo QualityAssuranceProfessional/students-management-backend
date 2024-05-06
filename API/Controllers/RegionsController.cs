@@ -37,7 +37,7 @@ namespace API.Controllers
                    .ToListAsync();
 
                 return Ok(regions);
-
+               
             }
             catch (Exception ex)
             {
