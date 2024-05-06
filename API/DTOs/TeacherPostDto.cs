@@ -8,7 +8,6 @@ namespace API.DTOs
         public string? FatherName { get; set; }
         public string? GrandFatherName { get; set; }
         public string? SurName { get; set; }
-
         public short? Gender { get; set; }
         public string? NationalId { get; set; }
         public DateTime? JoinDate { get; set; }

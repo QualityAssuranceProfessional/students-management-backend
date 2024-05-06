@@ -41,7 +41,7 @@ namespace Shared
             }
         }
 
-        public static (bool isComplex, List<string> messages) IsPasswordComplex(string password)
+        public static List<string> IsPasswordComplex(string password)
         {
             List<string> validationMessages = new List<string>();
 
@@ -71,9 +71,7 @@ namespace Shared
                 validationMessages.Add("Password must contain at least one special character.");
             }
 
-            bool isComplex = validationMessages.Count == 0;
-
-            return (isComplex, validationMessages);
+            return validationMessages;
         }
 
         public static bool IsStringOnly(object value)
@@ -89,8 +87,6 @@ namespace Shared
             {
                 return false;
             }
-
-         
             foreach (char c in strValue)
             {
                 if (!char.IsLetter(c))

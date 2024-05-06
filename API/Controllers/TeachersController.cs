@@ -1,5 +1,6 @@
 ﻿using API.DTOs;
 using API.Module;
+using Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,9 +44,7 @@ namespace API.Controllers
                         Address = t.Address,
                         Username = t.Username,
                         Email = t.Email,
-                        Password = t.Password,
                         CreatedOn = t.CreatedOn,
-                        CreatedBy = t.CreatedBy,
                         Status = t.Status
                     })
                     .Skip((page - 1) * pageSize)
@@ -71,21 +70,25 @@ namespace API.Controllers
                 }
 
                 var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
-                if (!passwordValidation.isComplex)
+                if (passwordValidation.Count()>0)
                 {
-                    return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation.messages));
+                    return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation));
                 }
+
                 if (!Validations.IsValidEmail(teacher.Email))
                 {
                     return BadRequest("Invalid email address.");
                 }
 
-                if (!Validations.IsStringOnly(teacher.FirstName))
+                //if (!Validations.IsStringOnly(teacher.FirstName))
+                //{
+                //    return BadRequest("this fields should only string");
+                //}
 
+                if (string.IsNullOrEmpty(teacher.FirstName))
                 {
-                    return BadRequest("this fields should only string");
+                    return BadRequest("FirstName should not be null !!");
                 }
-            
 
                 var teacherobj = new Teacher
                 {
@@ -101,7 +104,7 @@ namespace API.Controllers
                     Address = teacher.Address,
                     Username = teacher.Username,
                     Email = teacher.Email,
-                    Password = teacher.Password,
+                    Password = Security.ComputeHash(teacher.Password, HashAlgorithms.SHA256, null),
                     CreatedOn = DateTime.Now,
                     CreatedBy = null,
                     Status = 1
@@ -122,35 +125,30 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTeacher(int id, [FromBody] TeacherPutDto teacher)
         {
-            if (id != teacher.TeacherId)
-            {
-                return BadRequest("The teacher ID in the route does not match the teacher ID in the request body.");
-            }
-
-            if (String.IsNullOrEmpty(teacher.FirstName))
-            {
-                return BadRequest("The first name of the teacher is required.");
-            }
-
-            if (!Validations.IsValidEmail(teacher.Email))
-            {
-                return BadRequest("Invalid Email address.");
-            }
-
-            var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
-            if (!passwordValidation.isComplex)
-            {
-                return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation.messages));
-            }
-
-            if (!Validations.IsStringOnly(teacher.FirstName))
-
-            {
-                return BadRequest("this fields should only string");
-            }
 
             try
             {
+                if (id != teacher.TeacherId)
+                {
+                    return BadRequest("The teacher ID in the route does not match the teacher ID in the request body.");
+                }
+
+                if (String.IsNullOrEmpty(teacher.FirstName))
+                {
+                    return BadRequest("The first name of the teacher is required.");
+                }
+
+                if (!Validations.IsValidEmail(teacher.Email))
+                {
+                    return BadRequest("Invalid Email address.");
+                }
+
+                var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
+                if (passwordValidation.Count() > 0)
+                {
+                    return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation));
+                }
+
                 var teacherToUpdate = await _context.Teachers.FirstOrDefaultAsync(x => x.TeacherId == id);
 
                 if (teacherToUpdate == null)
@@ -188,17 +186,18 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeacher(long id) 
         {
-            var teacherToDelete = await _context.Teachers.FindAsync(id);
+            var teacherToDelete = await _context.Teachers.Where(x => x.Status != 9 && x.TeacherId == id).SingleOrDefaultAsync();
 
             if (teacherToDelete == null)
             {
-                return NotFound("The teacher was not found.");
+                return NotFound("The teacher was not found or Already deleted before.");
             }
 
             try
             {
                 teacherToDelete.Status = 9;
                 teacherToDelete.UpdatedOn = DateTime.Now;
+                teacherToDelete.UpdatedBy = null;
                 await _context.SaveChangesAsync();
 
                 return Ok("The teacher was deleted successfully.");
