@@ -18,9 +18,6 @@ namespace API.Controllers
         public UserController(SchoolManagementSystemContext context)  
         {
             _context = context;
-            
-
-            
         }
         
 
@@ -37,6 +34,12 @@ namespace API.Controllers
                           UserId = u.UserId,
                           UserName = u.UserName,
                           CreatedOn = u.CreatedOn,
+                          Email = u.Email,
+                          FullName = u.FullName,
+                          PhoneNumber = u.PhoneNumber,
+                          BirthDate = u.BirthDate,
+                          UpdatedOn = u.UpdatedOn,
+                          Status = u.Status
                       })
                    .Skip((page - 1) * pageSize)
                    .Take(pageSize)
@@ -57,10 +60,20 @@ namespace API.Controllers
         {
             try
             {
+                if (!Validations.IsValidPhone(User.PhoneNumber))
+                {
+                    return StatusCode(404, "Parent's Phonenumber is not valid !!");
+                }
+
+                if (!Validations.IsValidEmail(User.Email))
+                {
+                    return StatusCode(404, "Parent's email is not valid !!");
+                }
+
 
                 User userobj = new User
                 {
-                    Photo = User.Photo,
+                    //   Photo = Convert.FromBase64String(User.Photo),
                     Email = User.Email,
                     Password = User.Password,
                     FullName = User.FullName,
@@ -71,17 +84,6 @@ namespace API.Controllers
                     CreatedBy = null,
                     Status = 1,
                 };
-              
-                if (!Validations.IsValidPhone(userobj.PhoneNumber))
-                {
-                    return StatusCode(404, "Parent's Phonenumber is not valid !!");
-                }
-
-                if (!Validations.IsValidEmail(userobj.Email))
-                {
-                    return StatusCode(404, "Parent's email is not valid !!");
-                }
-
 
                 _context.Users.Add(userobj);
                 await _context.SaveChangesAsync();
@@ -98,13 +100,13 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUsers(int id, [FromBody] UserPutDto user)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest("The User was not found.");
-            }
-
             try
             {
+                if (id != user.UserId)
+                {
+                    return BadRequest("The User was not found.");
+                }
+
                 var UserToUpdate = await _context.Users.FindAsync(id);
 
                 if (UserToUpdate == null)
@@ -124,7 +126,7 @@ namespace API.Controllers
                 UserToUpdate.Status = 1;
                 
 
-                _context.Entry(UserToUpdate).State = EntityState.Modified;
+               // _context.Entry(UserToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
                 return Ok("The User was updated successfully.");

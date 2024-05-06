@@ -7,7 +7,7 @@ namespace API.Module
     {
         public int UserId { get; set; }
    
-        public String? Photo { get; set; }
+        public Byte[] Photo { get; set; }
         public string? Email { get; set; }
         public String? Password { get; set; }
         public string? FullName { get; set; }
