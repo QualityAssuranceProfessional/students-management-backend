@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API.Module
+namespace API.DTOs
 {
-    public partial class User
+    public class UserPutDto
     {
         public int UserId { get; set; }
-   
+        
+
         public String? Photo { get; set; }
         public string? Email { get; set; }
         public String? Password { get; set; }
@@ -14,12 +14,5 @@ namespace API.Module
         public String? UserName { get; set; }
         public String? PhoneNumber { get; set; }
         public DateTime? BirthDate { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? UpdatedBy { get; set; }
-
-        public DateTime? UpdatedOn { get; set; }
-       
-        public short? Status { get; set; }
     }
 }

@@ -40,7 +40,21 @@ namespace Shared
             }
         }
 
+        public static bool IsValidPhoneUser(byte[] phone)
+        {
+            try
+            {
+                if (.IsNullOrEmpty(phone)) return false;
 
+                if (phone.Length < 9 || phone.Length > 13) return false;
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
 
     }
