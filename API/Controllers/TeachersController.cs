@@ -69,8 +69,8 @@ namespace API.Controllers
                     return BadRequest("The teacher data is missing or invalid.");
                 }
 
-                var passwordValidation = Validations.IsValidPassword(teacher.Password);
-                if (!passwordValidation)
+                var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
+                if (passwordValidation.Count > 0)
                 {
                     return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation));
                 }
@@ -143,8 +143,8 @@ namespace API.Controllers
                     return BadRequest("Invalid Email address.");
                 }
 
-                var passwordValidation = Validations.IsValidPassword(teacher.Password);
-                if (!passwordValidation)
+                var passwordValidation = Validations.IsPasswordComplex(teacher.Password);
+                if (passwordValidation.Count() > 0)
                 {
                     return BadRequest("Password complexity requirements not met. Details: " + string.Join(" ", passwordValidation));
                 }

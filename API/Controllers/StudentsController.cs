@@ -88,7 +88,8 @@ namespace API.Controllers
                 {
                     return StatusCode(404, "Student's email is not valid !!");
                 }
-                if (!Validations.IsValidPassword(student.Password))
+                var passwordValidation = Validations.IsPasswordComplex(student.Password);    
+                if (passwordValidation.Count > 0)
                 {
                     return StatusCode(404, "Password can't be null or less than 9 letters must be mixed with letters and numbers and characters !!");
                 }
