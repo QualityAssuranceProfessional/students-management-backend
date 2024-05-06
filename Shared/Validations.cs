@@ -29,9 +29,9 @@ namespace Shared
         {
             try
             {
-                if(string.IsNullOrEmpty(phone)) return false;
+                if (string.IsNullOrEmpty(phone)) return false;
 
-                if(phone.Length < 9 || phone.Length > 13) return false;
+                if (phone.Length < 9 || phone.Length > 13) return false;
 
                 return true;
             }
@@ -41,41 +41,61 @@ namespace Shared
             }
         }
 
-        public static bool IsValidPassword(string password)
+        public static List<string> IsPasswordComplex(string password)
         {
-            try
+            List<string> validationMessages = new List<string>();
+
+            var uppercaseRegex = new Regex(@"[A-Z]");
+            var lowercaseRegex = new Regex(@"[a-z]");
+            var digitRegex = new Regex(@"\d");
+            var specialCharRegex = new Regex(@"[!@#$%^&*()_+}{:;'?/>.<,|~`]");
+
+            if (password.Length < 8)
             {
-                if (string.IsNullOrEmpty(password)) return false;
-
-                if (password.Length < 9) return false;
-                if (!Regex.IsMatch(password, @"[A-Z]"))
-                {
-                    return false;
-                }
-
-                if (!Regex.IsMatch(password, @"[a-z]"))
-                {
-                    return false;
-                }
-
-                if (!Regex.IsMatch(password, @"[0-9]"))
-                {
-                    return false;
-                }
-
-                if (!Regex.IsMatch(password, @"[!@#$%^&*(),.?\:{ }|<>]"))
-        {
-                    return false;
-                }
-                return true;
+                validationMessages.Add("Password must be at least 8 characters long.");
             }
-            catch
+            if (!uppercaseRegex.IsMatch(password))
+            {
+                validationMessages.Add("Password must contain at least one uppercase letter.");
+            }
+            if (!lowercaseRegex.IsMatch(password))
+            {
+                validationMessages.Add("Password must contain at least one lowercase letter.");
+            }
+            if (!digitRegex.IsMatch(password))
+            {
+                validationMessages.Add("Password must contain at least one digit.");
+            }
+            if (!specialCharRegex.IsMatch(password))
+            {
+                validationMessages.Add("Password must contain at least one special character.");
+            }
+
+            return validationMessages;
+        }
+
+        public static bool IsStringOnly(object value)
+        {
+            if (value == null)
             {
                 return false;
             }
+
+            string strValue = value.ToString();
+
+            if (string.IsNullOrWhiteSpace(strValue))
+            {
+                return false;
+            }
+            foreach (char c in strValue)
+            {
+                if (!char.IsLetter(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
-
-
-
     }
 }
