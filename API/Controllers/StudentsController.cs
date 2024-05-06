@@ -1,7 +1,9 @@
 ﻿using API.DTOs;
 using API.Module;
+using Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shared;
 
 namespace API.Controllers
@@ -38,18 +40,15 @@ namespace API.Controllers
                          BirthDate = s.BirthDate,
                          JoinDate = s.JoinDate,
                          BloodType = s.BloodType,
-                         YearClassID = s.YearClassID,
                          Username = s.Username,
                          Email = s.Email,
-                         Password = s.Password,
                          RegionId = s.RegionId,
                          Address = s.Address,
                          ParentName = s.ParentName,
                          ParentPhone = s.ParentPhone,
                          ParentEmail = s.ParentEmail,
                          CreatedOn = s.CreatedOn,
-                         CreatedBy = s.CreatedBy,
-                         Status = s.Status
+                         Status = s.Status,
                      })
                   .Skip((page - 1) * pageSize)
                   .Take(pageSize)
@@ -75,8 +74,6 @@ namespace API.Controllers
                     return StatusCode(404, "خطأ في عملية ارسال البيانات");
                 }
 
-
-                
                 if (!Validations.IsValidPhone(student.ParentPhone))
                 {
                     return StatusCode(404, "Parent's Phonenumber is not valid !!");
@@ -106,10 +103,10 @@ namespace API.Controllers
                 studentobj.BirthDate = student.BirthDate;
                 studentobj.JoinDate = student.JoinDate;
                 studentobj.BloodType = student.BloodType;
-                studentobj.YearClassID =(student.YearClassID == 0 ? null : student.YearClassID);
+                studentobj.YearClassID = (student.YearClassID == 0 ? null : student.YearClassID);
                 studentobj.Username = student.Username;
                 studentobj.Email = student.Email;
-                studentobj.Password = student.Password;
+                studentobj.Password = Security.ComputeHash(student.Password, HashAlgorithms.SHA256 , null);
                 studentobj.RegionId = (student.RegionId==0 ? null:student.RegionId);
                 studentobj.Address = student.Address;
                 studentobj.ParentName = student.ParentName;
@@ -134,13 +131,18 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(long id, [FromBody] StudentPutDto student)
         {
-            if (id != student.StudentId)
-            {
-                return BadRequest("The student was not found.");
-            }
-
             try
             {
+                if(student == null)
+                {
+                    return BadRequest("The student was not found.");
+                }
+
+                if (id != student.StudentId)
+                {
+                    return BadRequest("The student was not found.");
+                }
+
                 var studentToUpdate = await _context.Students.FindAsync(id);
 
                 if (studentToUpdate == null)
@@ -161,7 +163,7 @@ namespace API.Controllers
                 studentToUpdate.YearClassID = (student.YearClassID == 0 ? null : student.YearClassID);
                 studentToUpdate.Username = student.Username;
                 studentToUpdate.Email = student.Email;
-                studentToUpdate.Password = student.Password;
+                studentToUpdate.Password = Security.ComputeHash(student.Password, HashAlgorithms.SHA256, null);
                 studentToUpdate.RegionId = (student.RegionId == 0 ? null : student.RegionId);
                 studentToUpdate.Address = student.Address;
                 studentToUpdate.ParentName = student.ParentName;
@@ -171,10 +173,7 @@ namespace API.Controllers
                 studentToUpdate.UpdatedBy = null;
                 studentToUpdate.Status = 1;
 
-                _context.Entry(studentToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-
-
                 return Ok("The student was updated successfully.");
             }
             catch (Exception ex)
@@ -187,15 +186,15 @@ namespace API.Controllers
         // DELETE: api/Students
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(long id)
-        {
-            var studentToDelete = await _context.Students.FindAsync(id);
-
-            if (studentToDelete == null)
-            {
-                return NotFound("The student was not found.");
-            }
+        { 
             try
             {
+                var studentToDelete = await _context.Students.FindAsync(id);
+
+                if (studentToDelete == null)
+                {
+                    return NotFound("The student was not found.");
+                }
                 studentToDelete.Status = 9;
                 studentToDelete.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
