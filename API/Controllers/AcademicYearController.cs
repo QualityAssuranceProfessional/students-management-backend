@@ -50,23 +50,36 @@ namespace API.Controllers
             try
             {
                 AcademicYear academicYobj = new AcademicYear();
+
                 //var ac = await _context.AcademicYears.Where(r => r.AcademicYearName == academicY.AcademicYearName).SingleAsync();
                 //if(ac != null)
                 //{
-                //    return BadRequest("The AcademicYear was not found");
+                //    return BadRequest("The AcademicYear is found");
                 //}
                 //  var ac = _context.AcademicYears.Where(r => r.AcademicYearName == academicY.AcademicYearName).SingleOrDefaultAsync();
+                if(ModelState.IsValid)
+                {
+                    if(!_context.AcademicYears.Any(a => a.AcademicYearName == academicY.AcademicYearName))
+                    {
+                        academicYobj.AcademicYearName = academicY.AcademicYearName;
+                        academicYobj.CreatedOn = DateTime.Now;
+                        academicYobj.CreatedBy = null;
+                        academicYobj.Status = 1;
 
+                        _context.AcademicYears.Add(academicYobj);
+                        await _context.SaveChangesAsync();
+                        return Ok(academicYobj);
 
-                academicYobj.AcademicYearName = academicY.AcademicYearName;
-                academicYobj.CreatedOn = DateTime.Now;
-                academicYobj.CreatedBy = null;
-                academicYobj.Status = 1;
-              
-                _context.AcademicYears.Add(academicYobj);
-                await _context.SaveChangesAsync();
-                return Ok(academicYobj);
-              
+                    }
+                    else
+                    {
+                        return BadRequest("The AcademicYear already exists");
+                    }
+                }
+                else
+                {
+                    return BadRequest("error");
+                }
 
             }
            
@@ -80,18 +93,19 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAcademicYear(short id, [FromBody] AcademicYPutDto academic)
         {
-            if (id != academic.AcademicYearId)
-            {
-                return BadRequest("The Academic Year was not found.");
-            }
-
-            if (String.IsNullOrEmpty(academic.AcademicYearName))
-            {
-                return StatusCode(404, "the Academic Year is empty !!");
-            }
+           
 
             try
             {
+                if (id != academic.AcademicYearId)
+                {
+                    return BadRequest("The Academic Year was not found.");
+                }
+
+                if (String.IsNullOrEmpty(academic.AcademicYearName))
+                {
+                    return StatusCode(404, "the Academic Year is empty !!");
+                }
                 var academicUpdate = await _context.AcademicYears.Where
                     (a => a.AcademicYearId == academic.AcademicYearId).SingleOrDefaultAsync();
                 if (academicUpdate == null)
@@ -115,15 +129,15 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAcademicYear(short id)
         {
-            var academicDelete = await _context.AcademicYears.FindAsync(id);
-
-            if (academicDelete == null)
-            {
-                return NotFound("The Academic Year was not found.");
-            }
+            
             try
             {
-               
+                var academicDelete = await _context.AcademicYears.FindAsync(id);
+
+                if (academicDelete == null)
+                {
+                    return NotFound("The Academic Year was not found.");
+                }
                 academicDelete.UpdatedOn = DateTime.Now;
                 academicDelete.Status = 9;
                 await _context.SaveChangesAsync();

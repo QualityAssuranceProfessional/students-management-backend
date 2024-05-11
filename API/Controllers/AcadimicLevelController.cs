@@ -52,14 +52,14 @@ namespace API.Controllers
                 if (academicL.AcadmicLevelType == 1 || academicL.AcadmicLevelType == 2 || academicL.AcadmicLevelType == 3)
                 {
                     AcadimicLevel academicLobj = new AcadimicLevel();
-
+                 
                     
                     academicLobj.Name = academicL.Name;
                     academicLobj.CreatedOn = DateTime.Now;
                     academicLobj.CreatedBy = null;
                     academicLobj.Status = 1;
                     academicLobj.AcadmicLevelType = academicL.AcadmicLevelType;
-
+                   
                     _context.AcadimicLevels.Add(academicLobj);
                     await _context.SaveChangesAsync();
                     return Ok(academicLobj);
@@ -78,18 +78,19 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAcademicLevel(short id, [FromBody] AcadimicLPutDto academicLP)
         {
-            if (id != academicLP.AcadimicLevelId)
-            {
-                return BadRequest("The Academic Year was not found.");
-            }
-
-            if (String.IsNullOrEmpty(academicLP.Name))
-            {
-                return StatusCode(404, "the Academic Year is empty !!");
-            }
 
             try
             {
+
+                if (id != academicLP.AcadimicLevelId)
+                {
+                    return BadRequest("The Academic Year was not found.");
+                }
+
+                if (String.IsNullOrEmpty(academicLP.Name))
+                {
+                    return StatusCode(404, "the Academic Year is empty !!");
+                }
                 var academicLUpdate = await _context.AcadimicLevels.Where
                     (a => a.AcadimicLevelId == academicLP.AcadimicLevelId).SingleOrDefaultAsync();
                 if (academicLUpdate == null)
@@ -115,14 +116,15 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAcademicLevel(short id)
         {
-            var academicDelete = await _context.AcademicYears.FindAsync(id);
-
-            if (academicDelete == null)
-            {
-                return NotFound("The Academic Level was not found.");
-            }
             try
             {
+
+                var academicDelete = await _context.AcademicYears.FindAsync(id);
+
+                if (academicDelete == null)
+                {
+                    return NotFound("The Academic Level was not found.");
+                }
 
                 academicDelete.UpdatedOn = DateTime.Now;
                 academicDelete.Status = 9;
