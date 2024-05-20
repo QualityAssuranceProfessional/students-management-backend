@@ -18,6 +18,10 @@ namespace API.Module
         public int? CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
 
+        public DateTime? LoginTryAttemptDate { get; set; }
+        public short? LoginTryAttempts { get; set; }
+        public DateTime? LastLoginOn { get; set; }
+
         public DateTime? UpdatedOn { get; set; }
        
         public short? Status { get; set; }

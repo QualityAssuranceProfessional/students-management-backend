@@ -2,6 +2,7 @@
 using API.Module;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -11,6 +12,7 @@ namespace API.Controllers
     {
         // constructor with dbcontext
         private readonly SchoolManagementSystemContext _context;
+
         public RegionsController(SchoolManagementSystemContext context)
         {
             _context = context;
@@ -52,10 +54,17 @@ namespace API.Controllers
         {
             try
             {
+                var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if(UserId == null)
+                {
+                    return BadRequest("The user was not found.");
+                }
+
+
                 Region regionobj = new Region();
                 regionobj.Name = region.Name;
                 regionobj.CreatedOn = DateTime.Now;
-                regionobj.CreatedBy = null;
+                regionobj.CreatedBy = int.Parse(UserId);
                 regionobj.Status = 1;
                 regionobj.CityId = region.CityId;
 

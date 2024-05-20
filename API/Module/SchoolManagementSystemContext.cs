@@ -385,7 +385,8 @@ namespace API.Module
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.UserId).ValueGeneratedNever();
+                entity.Property(e => e.UserId)
+                .HasColumnName("UserID");
 
                 entity.Property(e => e.BirthDate).HasColumnType("date");
 
